@@ -38,6 +38,22 @@ class Calculator
     this.currentOperand = '';
   }
 
+  sqrtCompute() {
+    const prev = parseFloat(this.previousOperand);
+    const current = parseFloat(this.currentOperand);
+
+    console.log(prev);
+    console.log(current);
+
+    if (!isNaN(prev)) {
+      return;
+    }
+
+    this.currentOperand = Math.sqrt(current);
+    this.operation = undefined;
+    this.previousOperand = '';
+  }
+
   compute() {
     let computation;
     const prev = parseFloat(this.previousOperand);
@@ -116,6 +132,9 @@ const allClearButton = document.querySelector('[data-all-clear]');
 const previousOperandTextElement = document.querySelector('[data-previous-operand]');
 const currentOperandTextElement = document.querySelector('[data-current-operand]');
 
+const sqrtButton = document.querySelector('[data-sqrt]');
+const pmButton = document.querySelector('[data-pm]');
+
 const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement);
 
 numberButtons.forEach(button => {
@@ -144,5 +163,10 @@ allClearButton.addEventListener('click', button => {
 
 deleteButton.addEventListener('click', button => {
   calculator.delete();
+  calculator.updateDisplay();
+});
+
+sqrtButton.addEventListener('click', button => {
+  calculator.sqrtCompute();
   calculator.updateDisplay();
 });
