@@ -42,16 +42,26 @@ class Calculator
     const prev = parseFloat(this.previousOperand);
     const current = parseFloat(this.currentOperand);
 
-    console.log(prev);
-    console.log(current);
-
     if (!isNaN(prev)) {
       return;
     }
 
+    if (current < 0) {
+      this.currentOperand = 'Error';
+      return;
+    }
+
     this.currentOperand = Math.sqrt(current);
-    this.operation = undefined;
-    this.previousOperand = '';
+  }
+
+  plusMinus() {
+    const current = parseFloat(this.currentOperand);
+    
+    if (isNaN(current)) {
+      return;
+    }
+
+    this.currentOperand = -current;
   }
 
   compute() {
@@ -82,7 +92,13 @@ class Calculator
       default:
         return;
     }
-    this.currentOperand = computation;
+    
+    if (this.currentOperand.includes('.')) {
+      this.currentOperand = computation.toFixed(2);
+    } else {
+      this.currentOperand = computation;
+    }
+
     this.operation = undefined;
     this.previousOperand = '';
   }
@@ -109,12 +125,14 @@ class Calculator
   }
 
   updateDisplay() {
-    this.currentOperandTextElement.innerText = this.getDisplayNumber(this.currentOperand);
-
-    if (this.operation == 'sqrt') {
-      this.previousOperandTextElement.innerText = this.computation;
+    if (this.currentOperand !== 'Error') {
+      this.currentOperandTextElement.innerText = this.getDisplayNumber(this.currentOperand);
+    } else {
+      this.currentOperandTextElement.innerText = this.currentOperand;
+      this.clear();
+      return;
     }
-    
+
     if (this.operation != null) {
       this.previousOperandTextElement.innerText = 
         `${this.getDisplayNumber(this.previousOperand)} ${this.operation}`;
@@ -168,5 +186,10 @@ deleteButton.addEventListener('click', button => {
 
 sqrtButton.addEventListener('click', button => {
   calculator.sqrtCompute();
+  calculator.updateDisplay();
+});
+
+pmButton.addEventListener('click', button => {
+  calculator.plusMinus();
   calculator.updateDisplay();
 });
